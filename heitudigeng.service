@@ -1,0 +1,17 @@
+[Unit]
+Description=HeiTu DiGeng - 东北小农户保护性耕作AI服务
+After=network.target
+
+[Service]
+User=www
+Group=www
+WorkingDirectory=/www/wwwroot/heitudigeng
+ExecStart=/www/wwwroot/heitudigeng/venv/bin/gunicorn -c /www/wwwroot/heitudigeng/gunicorn.conf.py app:app
+Restart=always
+RestartSec=5
+
+# 环境变量
+Environment=PATH=/www/wwwroot/heitudigeng/venv/bin
+
+[Install]
+WantedBy=multi-user.target

@@ -1,0 +1,319 @@
+{% extends "base.html" %}
+
+{% block title %}农友互助社区 - 黑土智耕{% endblock %}
+
+{% block content %}
+<!-- Page Header -->
+<section class="page-header" style="background: linear-gradient(135deg, #1565c0 0%, #0d47a1 100%);">
+    <div class="container">
+        <div class="breadcrumb">
+            <a href="/">首页</a> / <span>农友互助社区</span>
+        </div>
+        <h1>👥 新农人互助与农技共享社区</h1>
+        <p>AI先答 + 农技员24小时双解答 · 大学生志愿者助农</p>
+    </div>
+</section>
+
+<!-- Chat Section -->
+<section style="padding: 2rem 0;">
+    <div class="container">
+        <div class="diagnosis-form">
+            <div class="alert alert-info" style="margin-bottom: 1.5rem;">
+                <span class="alert-icon">💡</span>
+                <div>
+                    <strong>怎么用？</strong>在下方输入您的问题，AI先给您一个参考回答，同时您的问题会推送给农技员和大学生志愿者，24小时内会有专业人工回复。
+                </div>
+            </div>
+
+            <!-- Chat Input -->
+            <div class="chat-input-container">
+                <textarea class="chat-input" id="questionInput" rows="1" placeholder="输入您的农业问题，例如：玉米叶片发黄是什么原因？"></textarea>
+                <button type="button" class="btn btn-primary" onclick="sendQuestion()">
+                    <span>📤</span> 提问
+                </button>
+            </div>
+
+            <!-- Quick Questions -->
+            <div style="margin-top: 1rem;">
+                <span style="font-size: 0.9rem; color: var(--text-secondary);">快捷问题：</span>
+                <button class="btn btn-sm btn-outline" onclick="askQuick('玉米叶片发黄怎么办')" style="margin: 0.25rem;">🌽 玉米叶片发黄</button>
+                <button class="btn btn-sm btn-outline" onclick="askQuick('免耕播种什么时间合适')" style="margin: 0.25rem;">🚜 免耕播种时间</button>
+                <button class="btn btn-sm btn-outline" onclick="askQuick('秸秆还田注意什么')" style="margin: 0.25rem;">🌾 秸秆还田注意</button>
+                <button class="btn btn-sm btn-outline" onclick="askQuick('玉米螟怎么防治')" style="margin: 0.25rem;">🐛 玉米螟防治</button>
+            </div>
+        </div>
+
+        <!-- AI Response -->
+        <div class="result-section" id="responseSection" style="display: none; margin-top: 1.5rem;">
+            <div class="card-header" style="background: linear-gradient(135deg, rgba(45, 90, 39, 0.1), rgba(74, 124, 67, 0.1));">
+                <span style="font-size: 1.5rem;">🤖</span>
+                <h3>AI参考回答</h3>
+                <span class="badge badge-info" style="margin-left: auto;">仅供参考</span>
+            </div>
+            <div class="card-body">
+                <div id="aiResponse" style="line-height: 1.8; white-space: pre-wrap;"></div>
+            </div>
+            <div class="card-footer">
+                <div class="alert alert-success" style="margin: 0;">
+                    <span class="alert-icon">✅</span>
+                    <div>
+                        您的的问题已提交，人工回答将在24小时内推送给您。请保持关注！
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Community Posts -->
+<section style="background: white; padding: 2rem 0;">
+    <div class="container">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+            <h2>🌾 农友分享</h2>
+            <button class="btn btn-primary" onclick="showPostModal()">
+                <span>✍️</span> 发布分享
+            </button>
+        </div>
+
+        <div id="postsContainer">
+            <!-- Posts will be loaded here -->
+        </div>
+
+        <div style="text-align: center; margin-top: 2rem;">
+            <button class="btn btn-outline" id="loadMoreBtn" onclick="loadMorePosts()">
+                加载更多
+            </button>
+        </div>
+    </div>
+</section>
+
+<!-- Student Helper Section -->
+<section style="background: linear-gradient(135deg, rgba(45, 90, 39, 0.05) 0%, rgba(74, 124, 67, 0.08) 100%); padding: 3rem 0;">
+    <div class="container">
+        <div class="section-header">
+            <h2>🎓 大学生助农专区</h2>
+            <p>高校学生提供免费线上农技咨询</p>
+        </div>
+
+        <div class="feature-grid" style="grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));">
+            <div class="feature-card">
+                <div class="feature-icon">📚</div>
+                <h3>农技咨询</h3>
+                <p>农业大学学生在线解答农业技术问题，用专业知识服务农户。</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">🎨</div>
+                <h3>科普讲解</h3>
+                <p>图文并茂的农业科普内容，让保护性耕作知识更易懂。</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">🤝</div>
+                <h3>实践闭环</h3>
+                <p>学生在服务中学习，农户在帮助中增收，双向赋能。</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Expert Section -->
+<section style="background: white; padding: 3rem 0;">
+    <div class="container">
+        <div class="section-header">
+            <h2>👨‍🌾 种植大户经验分享</h2>
+            <p>实战经验，避坑指南</p>
+        </div>
+
+        <div class="feature-grid" style="grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));">
+            <div class="info-box">
+                <h4>✅ 秸秆还田第一年要注意啥？</h4>
+                <p>老王（玉米种植大户）：第一年苗发黄别慌，那是正常的"过渡期"。多出苗5%就够了，秋天测产不比老办法差。</p>
+            </div>
+            <div class="info-box">
+                <h4>✅ 免耕播种机怎么选？</h4>
+                <p>李大哥：一定要选播种精度高的，深度要一致。建议买个带监控的，漏播了能报警。</p>
+            </div>
+            <div class="info-box">
+                <h4>✅ 轮作真的有用吗？</h4>
+                <p>张婶：种了三年玉米后轮作大豆，土壤松软多了，大豆固氮效果好，下茬玉米少打了两遍肥。</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- How It Works -->
+<section style="background: linear-gradient(135deg, rgba(45, 90, 39, 0.05) 0%, rgba(74, 124, 67, 0.08) 100%); padding: 3rem 0;">
+    <div class="container">
+        <div class="section-header">
+            <h2>📋 社区问答机制</h2>
+            <p>"AI + 人工"双解答，更靠谱</p>
+        </div>
+
+        <div class="feature-grid" style="grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));">
+            <div class="feature-card" style="text-align: center;">
+                <div style="width: 50px; height: 50px; background: var(--primary-color); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 1rem; color: white; font-weight: bold;">1</div>
+                <h3>AI先答</h3>
+                <p>您提问后，AI立即给出参考回答</p>
+            </div>
+            <div class="feature-card" style="text-align: center;">
+                <div style="width: 50px; height: 50px; background: var(--primary-color); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 1rem; color: white; font-weight: bold;">2</div>
+                <h3>人工推送</h3>
+                <p>问题同步推送给农技员和大学生</p>
+            </div>
+            <div class="feature-card" style="text-align: center;">
+                <div style="width: 50px; height: 50px; background: var(--primary-color); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 1rem; color: white; font-weight: bold;">3</div>
+                <h3>24h双答</h3>
+                <p>24小时内获得专业人工回复</p>
+            </div>
+            <div class="feature-card" style="text-align: center;">
+                <div style="width: 50px; height: 50px; background: var(--primary-color); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 1rem; color: white; font-weight: bold;">4</div>
+                <h3>知识沉淀</h3>
+                <p>优质问答沉淀为社区知识库</p>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    let currentPage = 1;
+    let allPosts = [];
+
+    // Load posts on page load
+    document.addEventListener('DOMContentLoaded', function() {
+        loadPosts();
+    });
+
+    async function loadPosts() {
+        try {
+            const response = await fetch('/api/community/posts');
+            const data = await response.json();
+            if (data.success) {
+                allPosts = data.posts;
+                displayPosts(allPosts.slice(0, 5));
+            }
+        } catch (error) {
+            console.error('Error loading posts:', error);
+        }
+    }
+
+    function displayPosts(posts) {
+        const container = document.getElementById('postsContainer');
+        container.innerHTML = posts.map(post => `
+            <div class="post-card fade-in">
+                <div class="post-header">
+                    <div class="post-avatar">${post.author.charAt(0)}</div>
+                    <div class="post-author">
+                        <h4>${post.author}</h4>
+                        <span class="post-time">${post.time}</span>
+                    </div>
+                </div>
+                <div class="post-content">${post.content}</div>
+                <div class="post-actions">
+                    <span class="post-action" onclick="likePost(${post.id})">
+                        <span>❤️</span> ${post.likes}
+                    </span>
+                    <span class="post-action">
+                        <span>💬</span> ${post.comments}
+                    </span>
+                    <span class="post-action">
+                        <span>🔗</span> 分享
+                    </span>
+                </div>
+            </div>
+        `).join('');
+    }
+
+    function loadMorePosts() {
+        currentPage++;
+        const start = (currentPage - 1) * 5;
+        const end = start + 5;
+        const newPosts = allPosts.slice(start, end);
+        if (newPosts.length > 0) {
+            const container = document.getElementById('postsContainer');
+            container.innerHTML += newPosts.map(post => `
+                <div class="post-card fade-in">
+                    <div class="post-header">
+                        <div class="post-avatar">${post.author.charAt(0)}</div>
+                        <div class="post-author">
+                            <h4>${post.author}</h4>
+                            <span class="post-time">${post.time}</span>
+                        </div>
+                    </div>
+                    <div class="post-content">${post.content}</div>
+                    <div class="post-actions">
+                        <span class="post-action" onclick="likePost(${post.id})">
+                            <span>❤️</span> ${post.likes}
+                        </span>
+                        <span class="post-action">
+                            <span>💬</span> ${post.comments}
+                        </span>
+                        <span class="post-action">
+                            <span>🔗</span> 分享
+                        </span>
+                    </div>
+                </div>
+            `).join('');
+        } else {
+            document.getElementById('loadMoreBtn').textContent = '没有更多了';
+            document.getElementById('loadMoreBtn').disabled = true;
+        }
+    }
+
+    function likePost(id) {
+        alert('点赞功能开发中，敬请期待！');
+    }
+
+    function askQuick(question) {
+        document.getElementById('questionInput').value = question;
+        sendQuestion();
+    }
+
+    async function sendQuestion() {
+        const question = document.getElementById('questionInput').value.trim();
+        if (!question) {
+            alert('请输入您的问题');
+            return;
+        }
+
+        const responseSection = document.getElementById('responseSection');
+        responseSection.style.display = 'block';
+        document.getElementById('aiResponse').innerHTML = '<span class="pulse">AI正在思考中...</span>';
+
+        // Scroll to response
+        responseSection.scrollIntoView({ behavior: 'smooth' });
+
+        try {
+            const response = await fetch('/api/chat', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ message: question })
+            });
+
+            const data = await response.json();
+
+            if (data.success) {
+                document.getElementById('aiResponse').textContent = data.response;
+            } else {
+                document.getElementById('aiResponse').textContent = '抱歉，AI回答遇到了一些问题，请稍后重试。';
+            }
+        } catch (error) {
+            console.error('Error:', error);
+            document.getElementById('aiResponse').textContent = '网络错误，请检查网络连接后重试。';
+        }
+    }
+
+    function showPostModal() {
+        const content = prompt('请输入您想分享的内容：\n\n提示：可以分享您的种植经验、耕作心得、或者遇到的问题和解决方法。');
+        if (content && content.trim()) {
+            alert('发布功能开发中，敬请期待！');
+        }
+    }
+
+    // Auto-resize textarea
+    document.getElementById('questionInput').addEventListener('input', function() {
+        this.style.height = 'auto';
+        this.style.height = Math.min(this.scrollHeight, 150) + 'px';
+    });
+</script>
+{% endblock %}

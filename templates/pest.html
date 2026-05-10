@@ -1,0 +1,321 @@
+{% extends "base.html" %}
+
+{% block title %}病虫草害识别 - 黑土智耕{% endblock %}
+
+{% block content %}
+<!-- Page Header -->
+<section class="page-header" style="background: linear-gradient(135deg, #e65100 0%, #bf360c 100%);">
+    <div class="container">
+        <div class="breadcrumb">
+            <a href="/">首页</a> / <span>病虫草害识别</span>
+        </div>
+        <h1>🐛 病虫草害AI精准识别与绿色防控</h1>
+        <p>拍照3秒识别，给出危害等级和本地化防控方案</p>
+    </div>
+</section>
+
+<!-- Pest Detection Form -->
+<section style="padding: 2rem 0;">
+    <div class="container">
+        <div class="diagnosis-form">
+            <div class="alert alert-info" style="margin-bottom: 1.5rem;">
+                <span class="alert-icon">💡</span>
+                <div>
+                    <strong>拍照技巧：</strong>拍摄病虫害特写照片，确保病斑/害虫清晰可见。不同角度多拍几张，识别更准确。
+                </div>
+            </div>
+
+            <form id="pestForm" enctype="multipart/form-data">
+                <!-- Image Upload -->
+                <div class="form-group">
+                    <label class="form-label">📷 病虫害照片 *</label>
+                    <div class="upload-area" id="uploadArea">
+                        <input type="file" name="image" id="imageInput" accept="image/*" required>
+                        <div class="upload-icon">🐛</div>
+                        <div class="upload-text">
+                            <h3>点击上传病虫害照片</h3>
+                            <p>支持 JPG、PNG 格式，文件小于16MB</p>
+                        </div>
+                    </div>
+                    <div class="upload-preview" id="uploadPreview" style="display: none;">
+                        <img id="previewImage" src="" alt="病虫害照片预览">
+                        <button type="button" class="btn btn-sm btn-outline" onclick="clearPreview()" style="margin-top: 0.5rem;">更换图片</button>
+                    </div>
+                </div>
+
+                <button type="submit" class="btn btn-primary btn-lg btn-block" id="submitBtn">
+                    <span>🔍</span> 开始识别
+                </button>
+            </form>
+        </div>
+
+        <!-- Loading State -->
+        <div class="loading" id="loadingState" style="display: none;">
+            <div class="spinner"></div>
+            <p class="loading-text">AI正在识别病虫害...</p>
+        </div>
+
+        <!-- Results -->
+        <div class="result-section" id="resultSection" style="display: none;">
+            <h2 style="text-align: center; margin-bottom: 1.5rem;">🔍 识别结果</h2>
+
+            <!-- Warning Level -->
+            <div class="alert alert-warning" id="warningAlert" style="margin-bottom: 1.5rem;">
+                <span class="alert-icon">⚠️</span>
+                <div>
+                    <strong id="warningLevel">注意监控</strong>
+                    <p id="warningMessage" style="margin: 0;"></p>
+                </div>
+            </div>
+
+            <!-- Detections -->
+            <div id="detectionsContainer">
+                <!-- Filled by JavaScript -->
+            </div>
+
+            <!-- Recommendation -->
+            <div class="card" style="margin-top: 1.5rem;">
+                <div class="card-header">
+                    <span>💡</span>
+                    <h3>综合建议</h3>
+                </div>
+                <div class="card-body">
+                    <p id="recommendation"></p>
+                </div>
+            </div>
+
+            <!-- Disclaimer -->
+            <div class="alert alert-warning" style="margin-top: 1.5rem;">
+                <span class="alert-icon">⚠️</span>
+                <div>
+                    <strong>免责声明：</strong>AI识别结果仅供参考，具体防治方案请咨询当地农技人员。优先采用绿色防控措施，减少农药使用。
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Feature Info -->
+<section style="background: white; padding: 3rem 0;">
+    <div class="container">
+        <div class="section-header">
+            <h2>🌿 我们的特色</h2>
+            <p>专为黑土保护设计的病虫害防控方案</p>
+        </div>
+
+        <div class="feature-grid" style="grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));">
+            <div class="info-box">
+                <h4>🎯 精准识别</h4>
+                <p>基于YOLOv8模型，3秒识别作物病虫害杂草，给出危害等级。</p>
+            </div>
+            <div class="info-box">
+                <h4>🌱 绿色优先</h4>
+                <p>优先推荐生物防治、物理防治方案，减少农药使用，保护黑土生态。</p>
+            </div>
+            <div class="info-box">
+                <h4>📍 本地化方案</h4>
+                <p>针对吉林本地易发病虫害（如玉米螟、根腐病）给出专属防控方案。</p>
+            </div>
+            <div class="info-box">
+                <h4>💊 合规农资</h4>
+                <p>推荐本地合规、低毒农药，避免乱用药、多花钱。</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Common Pests -->
+<section style="background: linear-gradient(135deg, rgba(45, 90, 39, 0.05) 0%, rgba(74, 124, 67, 0.08) 100%); padding: 3rem 0;">
+    <div class="container">
+        <div class="section-header">
+            <h2>🐛 东北常见病虫害</h2>
+            <p>秸秆覆盖后这些病虫害要重点关注</p>
+        </div>
+
+        <div class="feature-grid" style="grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));">
+            <div class="feature-card">
+                <div class="feature-icon">🐛</div>
+                <h3>玉米螟</h3>
+                <p>钻心虫，幼虫钻蛀茎秆和果穗，造成减产。秸秆覆盖地块发生率较高。</p>
+                <div style="margin-top: 1rem;">
+                    <span class="badge badge-warning">高发害虫</span>
+                </div>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">🍂</div>
+                <h3>玉米大斑病</h3>
+                <p>真菌性病害，叶片出现梭形大斑，高温高湿条件下易发。</p>
+                <div style="margin-top: 1rem;">
+                    <span class="badge badge-info">常见病害</span>
+                </div>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">🦗</div>
+                <h3>地下害虫</h3>
+                <p>蛴螬、金针虫等危害种子和根系，导致缺苗断垄。</p>
+                <div style="margin-top: 1rem;">
+                    <span class="badge badge-danger">苗期重点</span>
+                </div>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">🌿</div>
+                <h3>根腐病</h3>
+                <p>秸秆还田后湿度大易发生，导致根部腐烂、植株枯死。</p>
+                <div style="margin-top: 1rem;">
+                    <span class="badge badge-warning">湿度敏感</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Prevention Priority -->
+<section style="background: white; padding: 3rem 0;">
+    <div class="container">
+        <div class="section-header">
+            <h2>🛡️ 防治原则</h2>
+            <p>保护黑土，优先使用绿色防控</p>
+        </div>
+
+        <div style="max-width: 800px; margin: 0 auto;">
+            <div class="info-box" style="background: #e8f5e9; border-left-color: #4caf50;">
+                <h4>1. 农业防治为基础</h4>
+                <p>选用抗病品种、合理轮作、清洁田园，减少病虫源积累。</p>
+            </div>
+            <div class="info-box" style="background: #e3f2fd; border-left-color: #2196f3;">
+                <h4>2. 物理防治为辅助</h4>
+                <p>使用杀虫灯、黄板、糖醋液诱捕，减少农药使用量。</p>
+            </div>
+            <div class="info-box" style="background: #fff3e0; border-left-color: #ff9800;">
+                <h4>3. 生物防治优先</h4>
+                <p>释放赤眼蜂防治玉米螟，使用生物制剂（如Bt、苏云金杆菌）。</p>
+            </div>
+            <div class="info-box" style="background: #fce4ec; border-left-color: #e91e63;">
+                <h4>4. 化学防治最后用</h4>
+                <p>必须用药时选择低毒、高效、对黑土友好的药剂，严格按说明施用。</p>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    // File upload handling
+    const uploadArea = document.getElementById('uploadArea');
+    const imageInput = document.getElementById('imageInput');
+    const uploadPreview = document.getElementById('uploadPreview');
+    const previewImage = document.getElementById('previewImage');
+
+    uploadArea.addEventListener('click', () => imageInput.click());
+
+    imageInput.addEventListener('change', function(e) {
+        const file = e.target.files[0];
+        if (file) showPreview(file);
+    });
+
+    uploadArea.addEventListener('dragover', (e) => {
+        e.preventDefault();
+        uploadArea.classList.add('dragover');
+    });
+
+    uploadArea.addEventListener('dragleave', () => {
+        uploadArea.classList.remove('dragover');
+    });
+
+    uploadArea.addEventListener('drop', (e) => {
+        e.preventDefault();
+        uploadArea.classList.remove('dragover');
+        const file = e.dataTransfer.files[0];
+        if (file && file.type.startsWith('image/')) {
+            imageInput.files = e.dataTransfer.files;
+            showPreview(file);
+        }
+    });
+
+    function showPreview(file) {
+        const reader = new FileReader();
+        reader.onload = (e) => {
+            previewImage.src = e.target.result;
+            uploadArea.style.display = 'none';
+            uploadPreview.style.display = 'block';
+        };
+        reader.readAsDataURL(file);
+    }
+
+    function clearPreview() {
+        imageInput.value = '';
+        previewImage.src = '';
+        uploadArea.style.display = 'block';
+        uploadPreview.style.display = 'none';
+    }
+
+    // Form submission
+    document.getElementById('pestForm').addEventListener('submit', async function(e) {
+        e.preventDefault();
+
+        const formData = new FormData(this);
+
+        document.getElementById('pestForm').style.display = 'none';
+        document.getElementById('loadingState').style.display = 'flex';
+
+        try {
+            const response = await fetch('/api/pest-detect', {
+                method: 'POST',
+                body: formData
+            });
+
+            const data = await response.json();
+
+            if (data.success) {
+                displayResults(data.detection);
+            } else {
+                alert('识别失败：' + data.error);
+                document.getElementById('pestForm').style.display = 'block';
+                document.getElementById('loadingState').style.display = 'none';
+            }
+        } catch (error) {
+            console.error('Error:', error);
+            alert('网络错误，请重试');
+            document.getElementById('pestForm').style.display = 'block';
+            document.getElementById('loadingState').style.display = 'none';
+        }
+    });
+
+    function displayResults(detection) {
+        document.getElementById('loadingState').style.display = 'none';
+        document.getElementById('resultSection').style.display = 'block';
+
+        // Warning
+        document.getElementById('warningLevel').textContent = detection.warning_level;
+        document.getElementById('warningMessage').textContent = detection.climate_alert;
+
+        // Detections
+        const detectionsHtml = detection.detections.map(pest => {
+            const severityClass = pest.severity === '高' ? 'severity-high' :
+                                 pest.severity === '中' ? 'severity-medium' : 'severity-low';
+
+            return `
+                <div class="card" style="margin-bottom: 1rem;">
+                    <div class="card-header">
+                        <span>${pest.type === '虫害' ? '🐛' : '🍂'}</span>
+                        <h3>${pest.name}</h3>
+                        <span class="severity-indicator ${severityClass}">${pest.severity}危</span>
+                    </div>
+                    <div class="card-body">
+                        <p><strong>说明：</strong>${pest.description}</p>
+                        <p><strong>症状：</strong>${pest.symptoms}</p>
+                        <p><strong>防治方法：</strong>${pest.treatment}</p>
+                    </div>
+                </div>
+            `;
+        }).join('');
+        document.getElementById('detectionsContainer').innerHTML = detectionsHtml;
+
+        // Recommendation
+        document.getElementById('recommendation').textContent = detection.recommendation;
+
+        document.getElementById('resultSection').scrollIntoView({ behavior: 'smooth' });
+    }
+</script>
+{% endblock %}

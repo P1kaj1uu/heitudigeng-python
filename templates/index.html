@@ -1,0 +1,210 @@
+{% extends "base.html" %} {% block title %}黑土智耕 -
+东北小农户保护性耕作AI服务{% endblock %} {% block content %}
+<!-- Hero Section -->
+<section class="hero">
+  <div class="container">
+    <div class="hero-content">
+      <div class="hero-badge">🌱 AI赋能 · 守护黑土</div>
+      <h1>东北小农户保护性耕作<br />AI全流程服务平台</h1>
+      <div class="hero-buttons">
+        <a href="/diagnosis" class="btn btn-primary btn-lg">
+          <span>🔬</span> 立即体验黑土快诊
+        </a>
+        <a href="/calendar" class="btn btn-secondary btn-lg">
+          <span>📅</span> 查看耕作日历
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Stats Section -->
+<section
+  class="stats-section"
+  style="background: white; padding: 2rem 0; margin-top: -2rem"
+>
+  <div class="container">
+    <div
+      class="stats-grid"
+      style="
+        background: white;
+        border-radius: 1rem;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+        padding: 1.5rem;
+      "
+    >
+      <div class="stat-item">
+        <div class="stat-value">4+</div>
+        <div class="stat-label">核心功能模块</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-value">2min</div>
+        <div class="stat-label">AI快诊时间</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-value">0</div>
+        <div class="stat-label">使用门槛</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-value">100%</div>
+        <div class="stat-label">公益免费</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Features Section -->
+<section class="features">
+  <div class="container">
+    <div class="section-header">
+      <h2>🌾 核心功能</h2>
+      <p>围绕黑土保护，覆盖保护性耕作全流程</p>
+    </div>
+
+    <div class="feature-grid">
+      <!-- Feature 1: 黑土健康AI快诊 -->
+      <div class="feature-card">
+        <div class="feature-icon">🔬</div>
+        <h3>黑土健康AI快诊</h3>
+        <p>
+          上传土壤照片，AI
+          2分钟给出有机质、耕层厚度、退化风险评估，生成大白话改良建议。
+        </p>
+        <div>
+          <span class="feature-tag">YOLOv8识别</span>
+          <span class="feature-tag">免费公益</span>
+        </div>
+        <a href="/diagnosis" class="btn btn-outline btn-block mt-2"
+          >立即体验 →</a
+        >
+      </div>
+
+      <!-- Feature 2: 保护性耕作农艺管家 -->
+      <div class="feature-card">
+        <div class="feature-icon">📅</div>
+        <h3>全周期农艺管家</h3>
+        <p>
+          输入地块信息，生成精准到天的耕作日历：免耕播种、水肥管理、病虫害防控、秸秆还田全覆盖。
+        </p>
+        <div>
+          <span class="feature-tag">日历生成</span>
+          <span class="feature-tag">本地化</span>
+        </div>
+        <a href="/calendar" class="btn btn-outline btn-block mt-2"
+          >生成日历 →</a
+        >
+      </div>
+
+      <!-- Feature 3: 病虫草害识别 -->
+      <div class="feature-card">
+        <div class="feature-icon">🐛</div>
+        <h3>病虫草害AI识别</h3>
+        <p>
+          拍照3秒识别病虫害，给出危害等级。优先推荐生物防治方案，减少农药，保护黑土生态。
+        </p>
+        <div>
+          <span class="feature-tag">绿色防控</span>
+          <span class="feature-tag">本地方案</span>
+        </div>
+        <a href="/pest" class="btn btn-outline btn-block mt-2">开始识别 →</a>
+      </div>
+
+      <!-- Feature 4: 农友互助社区 -->
+      <div class="feature-card">
+        <div class="feature-icon">👥</div>
+        <h3>新农人互助社区</h3>
+        <p>
+          农户提问AI先答，农技员+大学生志愿者24小时双解答。种植大户分享实操经验，避坑指南。
+        </p>
+        <div>
+          <span class="feature-tag">AI+人工</span>
+          <span class="feature-tag">大学生助农</span>
+        </div>
+        <a href="/community" class="btn btn-outline btn-block mt-2"
+          >进入社区 →</a
+        >
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Info Section -->
+<section
+  class="info-section"
+  style="
+    background: linear-gradient(
+      135deg,
+      rgba(45, 90, 39, 0.05) 0%,
+      rgba(74, 124, 67, 0.08) 100%
+    );
+    padding: 3rem 0;
+  "
+>
+  <div class="container">
+    <div class="section-header">
+      <h2>🌍 为什么选择我们</h2>
+      <p>专为东北小农户设计，零门槛接地气</p>
+    </div>
+
+    <div
+      class="feature-grid"
+      style="grid-template-columns: repeat(auto-fit, minmax(250px, 1fr))"
+    >
+      <div class="info-box">
+        <h4>📱 手机就能用</h4>
+        <p>不用下载APP，不用注册账号。微信打开链接，拍照上传，马上出结果。</p>
+      </div>
+      <div class="info-box">
+        <h4>🗣️ 全程大白话</h4>
+        <p>没有专业术语，没有复杂数据。用咱东北话解释土壤健康，一看就懂。</p>
+      </div>
+      <div class="info-box">
+        <h4>🌱 专注黑土保护</h4>
+        <p>
+          通用农业平台没有的黑土专属评估，针对免耕、秸秆还田、轮作给出专业方案。
+        </p>
+      </div>
+      <div class="info-box">
+        <h4>💰 完全免费用</h4>
+        <p>
+          基础功能永久免费，大学生创业公益项目。不卖药、不卖肥，只帮你把地种好。
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA Section -->
+<section style="padding: 4rem 0">
+  <div class="container">
+    <div
+      style="
+        background: linear-gradient(135deg, #2d5a27 0%, #1a3d15 100%);
+        border-radius: 1.5rem;
+        padding: 3rem;
+        text-align: center;
+        color: white;
+      "
+    >
+      <h2 style="color: white; margin-bottom: 1rem">🌾 保护黑土，从今天开始</h2>
+      <p
+        style="
+          font-size: 1.1rem;
+          opacity: 0.9;
+          max-width: 600px;
+          margin: 0 auto 2rem;
+        "
+      >
+        东北黑土是咱的"命根子"，用科学的保护性耕作，让黑土越种越肥，产量越来越高。
+      </p>
+      <a
+        href="/diagnosis"
+        class="btn btn-secondary btn-lg"
+        style="background: white; color: #2d5a27"
+      >
+        试试黑土健康AI快诊 →
+      </a>
+    </div>
+  </div>
+</section>
+{% endblock %}

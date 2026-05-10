@@ -1,0 +1,274 @@
+{% extends "base.html" %}
+
+{% block title %}全周期农艺管家 - 黑土智耕{% endblock %}
+
+{% block content %}
+<!-- Page Header -->
+<section class="page-header">
+    <div class="container">
+        <div class="breadcrumb">
+            <a href="/">首页</a> / <span>全周期农艺管家</span>
+        </div>
+        <h1>📅 保护性耕作全周期AI农艺管家</h1>
+        <p>输入地块信息，AI生成精准到天的耕作日历</p>
+    </div>
+</section>
+
+<!-- Calendar Generator -->
+<section style="padding: 2rem 0;">
+    <div class="container">
+        <div class="diagnosis-form">
+            <div class="alert alert-info" style="margin-bottom: 1.5rem;">
+                <span class="alert-icon">💡</span>
+                <div>
+                    <strong>什么是全周期日历？</strong>根据您的地块位置、种植作物，AI结合当地气候特点，生成从播前准备到冬季养地的完整耕作指导。
+                </div>
+            </div>
+
+            <form id="calendarForm">
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1rem;">
+                    <div class="form-group">
+                        <label class="form-label">📍 地块位置</label>
+                        <select name="location" class="form-select" id="locationSelect">
+                            <option value="">请选择省份</option>
+                            <option value="吉林">吉林省</option>
+                            <option value="黑龙江">黑龙江省</option>
+                            <option value="辽宁">辽宁省</option>
+                            <option value="内蒙古">内蒙古自治区</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">🌽 种植作物</label>
+                        <select name="crop" class="form-select" id="cropSelect">
+                            <option value="corn">🌽 玉米</option>
+                            <option value="soybean">🌱 大豆</option>
+                            <option value="rice">🌾 水稻</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">📐 土地面积</label>
+                        <input type="text" name="area" class="form-input" placeholder="如：5亩 或 2垧">
+                    </div>
+                </div>
+
+                <button type="submit" class="btn btn-primary btn-lg btn-block">
+                    <span>📅</span> 生成耕作日历
+                </button>
+            </form>
+        </div>
+
+        <!-- Loading State -->
+        <div class="loading" id="loadingState" style="display: none;">
+            <div class="spinner"></div>
+            <p class="loading-text">正在生成专属日历...</p>
+        </div>
+
+        <!-- Calendar Results -->
+        <div class="result-section" id="resultSection" style="display: none;">
+            <div style="text-align: center; margin-bottom: 2rem;">
+                <h2 id="calendarTitle">📅 保护性耕作日历</h2>
+                <p id="calendarSubtitle" style="color: var(--text-secondary);"></p>
+            </div>
+
+            <!-- Tips -->
+            <div class="alert alert-success" style="margin-bottom: 2rem;">
+                <span class="alert-icon">💡</span>
+                <div id="tipsList">
+                    <!-- Filled by JavaScript -->
+                </div>
+            </div>
+
+            <!-- Timeline -->
+            <div class="calendar-timeline" id="timelineContainer">
+                <!-- Filled by JavaScript -->
+            </div>
+
+            <!-- Actions -->
+            <div style="text-align: center; margin-top: 2rem;">
+                <button type="button" class="btn btn-outline" onclick="window.print()">
+                    <span>🖨️</span> 打印日历
+                </button>
+                <a href="/diagnosis" class="btn btn-primary" style="margin-left: 1rem;">
+                    <span>🔬</span> 先做黑土健康诊断
+                </a>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Features Info -->
+<section style="background: white; padding: 3rem 0;">
+    <div class="container">
+        <div class="section-header">
+            <h2>🌾 日历功能说明</h2>
+            <p>全周期覆盖保护性耕作各个环节</p>
+        </div>
+
+        <div class="feature-grid" style="grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));">
+            <div class="feature-card" style="text-align: center;">
+                <div class="feature-icon" style="margin: 0 auto 1rem;">🌾</div>
+                <h3>播前秸秆处理</h3>
+                <p>秸秆如何处理、要不要还田、怎么处理</p>
+            </div>
+            <div class="feature-card" style="text-align: center;">
+                <div class="feature-icon" style="margin: 0 auto 1rem;">🚜</div>
+                <h3>免耕播种</h3>
+                <p>什么时候播、播多深、怎么播</p>
+            </div>
+            <div class="feature-card" style="text-align: center;">
+                <div class="feature-icon" style="margin: 0 auto 1rem;">💧</div>
+                <h3>水肥管理</h3>
+                <p>什么时候浇水、施什么肥、施多少</p>
+            </div>
+            <div class="feature-card" style="text-align: center;">
+                <div class="feature-icon" style="margin: 0 auto 1rem;">🐛</div>
+                <h3>病虫害防控</h3>
+                <p>怎么防、优先用什么方法</p>
+            </div>
+            <div class="feature-card" style="text-align: center;">
+                <div class="feature-icon" style="margin: 0 auto 1rem;">🌾</div>
+                <h3>收获秸秆还田</h3>
+                <p>什么时候收、秸秆怎么处理</p>
+            </div>
+            <div class="feature-card" style="text-align: center;">
+                <div class="feature-icon" style="margin: 0 auto 1rem;">❄️</div>
+                <h3>冬季养地</h3>
+                <p>冬天地里怎么办、怎么保墒</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Voice Input Info -->
+<section style="background: linear-gradient(135deg, rgba(45, 90, 39, 0.05) 0%, rgba(74, 124, 67, 0.08) 100%); padding: 3rem 0;">
+    <div class="container">
+        <div class="section-header">
+            <h2>🗣️ 语音问答（即将上线）</h2>
+            <p>说东北话，AI听得懂</p>
+        </div>
+
+        <div style="max-width: 700px; margin: 0 auto; text-align: center;">
+            <div class="info-box" style="text-align: center; padding: 2rem;">
+                <h4 style="font-size: 1.5rem; margin-bottom: 1rem;">支持方言提问，例如：</h4>
+                <div style="display: flex; flex-wrap: wrap; gap: 1rem; justify-content: center;">
+                    <span class="feature-tag" style="font-size: 1rem; padding: 0.5rem 1rem;">"今年免耕播种啥时候最合适？"</span>
+                    <span class="feature-tag" style="font-size: 1rem; padding: 0.5rem 1rem;">"秸秆全量还田注意啥？"</span>
+                    <span class="feature-tag" style="font-size: 1rem; padding: 0.5rem 1rem;">"玉米螟咋防治？"</span>
+                    <span class="feature-tag" style="font-size: 1rem; padding: 0.5rem 1rem;">"今年种大豆还是种苞米好？"</span>
+                </div>
+                <p style="margin-top: 1.5rem; color: var(--text-secondary);">用咱东北话问，AI用东北话答！</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Weather Alert Info -->
+<section style="background: white; padding: 3rem 0;">
+    <div class="container">
+        <div class="section-header">
+            <h2>⚠️ 极端天气预警（即将上线）</h2>
+            <p>干旱、霜冻、涝害提前预警</p>
+        </div>
+
+        <div class="feature-grid" style="grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));">
+            <div class="info-box">
+                <h4>🌵 干旱预警</h4>
+                <p>根据气象数据，提前预警干旱风险，并给出保护性耕作应急方案：免耕保墒、秸秆覆盖减少蒸发。</p>
+            </div>
+            <div class="info-box">
+                <h4>❄️ 霜冻预警</h4>
+                <p>春季霜冻提前3-5天预警，提醒农户推迟播种或采取覆盖保护措施，减少烂种风险。</p>
+            </div>
+            <div class="info-box">
+                <h4>🌊 涝害预警</h4>
+                <p>雨季涝害预警，提醒排水、及时病虫害防控，避免秸秆还田后湿度过大引发病害。</p>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    document.getElementById('calendarForm').addEventListener('submit', async function(e) {
+        e.preventDefault();
+
+        const formData = {
+            location: document.getElementById('locationSelect').value,
+            crop: document.getElementById('cropSelect').value,
+            area: document.querySelector('input[name="area"]').value
+        };
+
+        // Show loading
+        document.getElementById('calendarForm').style.display = 'none';
+        document.getElementById('loadingState').style.display = 'flex';
+
+        try {
+            const response = await fetch('/api/get-calendar', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(formData)
+            });
+
+            const data = await response.json();
+
+            if (data.success) {
+                displayCalendar(data.calendar);
+            } else {
+                alert('生成失败：' + data.error);
+                document.getElementById('calendarForm').style.display = 'block';
+                document.getElementById('loadingState').style.display = 'none';
+            }
+        } catch (error) {
+            console.error('Error:', error);
+            alert('网络错误，请重试');
+            document.getElementById('calendarForm').style.display = 'block';
+            document.getElementById('loadingState').style.display = 'none';
+        }
+    });
+
+    function displayCalendar(calendar) {
+        document.getElementById('loadingState').style.display = 'none';
+        document.getElementById('resultSection').style.display = 'block';
+
+        // Update title
+        document.getElementById('calendarTitle').textContent = `📅 ${calendar.crop}保护性耕作日历`;
+        document.getElementById('calendarSubtitle').textContent =
+            `${calendar.location} · 全周期约${calendar.total_days}天`;
+
+        // Tips
+        const tipsHtml = calendar.tips.map(tip => `<p style="margin: 0;">💡 ${tip}</p>`).join('');
+        document.getElementById('tipsList').innerHTML = tipsHtml;
+
+        // Timeline
+        const timelineHtml = calendar.phases.map(phase => `
+            <div class="timeline-item">
+                <div class="timeline-content">
+                    <span class="timeline-period">${phase.period}</span>
+                    <h4 style="margin: 0.5rem 0;">${phase.phase}</h4>
+                    <div class="timeline-tasks">
+                        ${phase.tasks.map(task => `
+                            <div class="timeline-task">
+                                <div>
+                                    <div class="task-name">${task.task}</div>
+                                    <div class="task-method">${task.method}</div>
+                                </div>
+                            </div>
+                            <p style="margin: 0.25rem 0 0.75rem 0; font-size: 0.9rem; color: var(--text-secondary);">
+                                💡 ${task.detail}
+                            </p>
+                        `).join('')}
+                    </div>
+                    <div class="timeline-tip">
+                        ⚠️ ${phase.key_point}
+                    </div>
+                </div>
+            </div>
+        `).join('');
+        document.getElementById('timelineContainer').innerHTML = timelineHtml;
+
+        // Scroll to results
+        document.getElementById('resultSection').scrollIntoView({ behavior: 'smooth' });
+    }
+</script>
+{% endblock %}

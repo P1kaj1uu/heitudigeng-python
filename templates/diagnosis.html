@@ -1,0 +1,538 @@
+{% extends "base.html" %} {% block title %}黑土健康AI快诊 - 黑土智耕{% endblock
+%} {% block content %}
+<!-- Diagnosis Hero -->
+<section class="diagnosis-hero">
+  <div class="container">
+    <div class="hero-content">
+      <div class="hero-badge">🔬 AI赋能 · 2分钟出结果</div>
+      <h1 style="color: white">黑土健康AI快诊</h1>
+      <p>
+        上传土壤照片，AI智能分析有机质、耕层厚度、退化风险...<br />生成大白话改良建议，让咱农户看得懂、用得上！
+      </p>
+    </div>
+  </div>
+</section>
+
+<!-- Diagnosis Form Section -->
+<section style="padding: 2rem 0">
+  <div class="container">
+    <div class="diagnosis-form">
+      <!-- Info Alert -->
+      <div class="alert alert-info" style="margin-bottom: 1.5rem">
+        <span class="alert-icon">💡</span>
+        <div>
+          <strong>拍照小技巧：</strong
+          >选择光照均匀的地块表土，拍摄深度约15cm的土壤剖面照片效果更佳。避免雨天拍摄。
+        </div>
+      </div>
+
+      <form id="diagnosisForm" enctype="multipart/form-data">
+        <!-- Image Upload -->
+        <div class="form-group">
+          <label class="form-label">📷 土壤照片 *</label>
+          <div class="upload-area" id="uploadArea">
+            <input
+              type="file"
+              name="image"
+              id="imageInput"
+              accept="image/*"
+              required
+            />
+            <div class="upload-icon">🖼️</div>
+            <div class="upload-text">
+              <h3>点击上传土壤照片</h3>
+              <p>支持 JPG、PNG 格式，文件小于16MB</p>
+            </div>
+          </div>
+          <div class="upload-preview" id="uploadPreview" style="display: none">
+            <img id="previewImage" src="" alt="土壤照片预览" />
+            <button
+              type="button"
+              class="btn btn-sm btn-outline"
+              onclick="clearPreview()"
+              style="margin-top: 0.5rem"
+            >
+              更换图片
+            </button>
+          </div>
+        </div>
+
+        <!-- Basic Info -->
+        <div
+          style="
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1rem;
+          "
+        >
+          <div class="form-group">
+            <label class="form-label">📍 地块位置</label>
+            <input
+              type="text"
+              name="location"
+              class="form-input"
+              placeholder="如：吉林省长春市某县某镇"
+            />
+          </div>
+          <div class="form-group">
+            <label class="form-label">📐 土地面积</label>
+            <input
+              type="text"
+              name="land_area"
+              class="form-input"
+              placeholder="如：5亩 或 2垧"
+            />
+          </div>
+        </div>
+
+        <!-- Crop History -->
+        <div class="form-group">
+          <label class="form-label">🌽 种植历史（近3年）</label>
+          <textarea
+            name="crop_history"
+            class="form-textarea"
+            rows="3"
+            placeholder="如：连续3年种植玉米，秸秆全部粉碎还田，偶尔施用农家肥"
+          ></textarea>
+          <p class="form-hint">越详细的种植历史有助于AI给出更准确的改良建议</p>
+        </div>
+
+        <!-- Yield Info -->
+        <div class="form-group">
+          <label class="form-label">📈 产量情况</label>
+          <textarea
+            name="yield_info"
+            class="form-textarea"
+            rows="2"
+            placeholder="如：去年玉米产量约18000斤/垧，近两年产量略有下降"
+          ></textarea>
+        </div>
+
+        <!-- Submit Button -->
+        <button
+          type="submit"
+          class="btn btn-primary btn-lg btn-block"
+          id="submitBtn"
+        >
+          <span>🔬</span> 开始AI快诊
+        </button>
+      </form>
+    </div>
+
+    <!-- Loading State -->
+    <div class="loading" id="loadingState" style="display: none">
+      <div class="spinner"></div>
+      <p class="loading-text">AI正在分析土壤，请稍候...</p>
+      <p style="color: var(--text-light); font-size: 0.9rem">预计需要10-30秒</p>
+    </div>
+
+    <!-- Results Section -->
+    <div class="result-section" id="resultSection" style="display: none">
+      <h2 style="text-align: center; margin-bottom: 1.5rem">
+        📊 黑土健康诊断报告
+      </h2>
+
+      <!-- Health Score -->
+      <div class="health-score" id="healthScore">
+        <!-- Filled by JavaScript -->
+      </div>
+
+      <!-- Interpretation -->
+      <div style="margin-bottom: 2rem">
+        <h3 style="margin-bottom: 1rem">💬 AI大白话解读</h3>
+        <ul class="interpretation-list" id="interpretationList">
+          <!-- Filled by JavaScript -->
+        </ul>
+      </div>
+
+      <!-- Indicators -->
+      <div class="indicator-grid" id="indicatorGrid">
+        <!-- Filled by JavaScript -->
+      </div>
+
+      <!-- Image Analysis Details -->
+      <div class="card" style="margin-bottom: 2rem">
+        <div class="card-header">
+          <span>🔍</span>
+          <h3>图像分析详情</h3>
+        </div>
+        <div class="card-body">
+          <div class="indicator-grid" id="imageAnalysisGrid">
+            <!-- Filled by JavaScript -->
+          </div>
+        </div>
+      </div>
+
+      <!-- Suggestions -->
+      <div class="suggestions" id="suggestionsSection">
+        <h3 style="margin-bottom: 1rem">🌱 保护性耕作改良建议</h3>
+        <div id="suggestionsList">
+          <!-- Filled by JavaScript -->
+        </div>
+      </div>
+
+      <!-- Disclaimer -->
+      <div class="alert alert-warning" style="margin-top: 2rem">
+        <span class="alert-icon">⚠️</span>
+        <div>
+          <strong>免责声明：</strong
+          >本AI诊断结果仅供参考，不能替代专业的土壤检测。如需精确数据，建议前往当地农业技术推广站进行专业检测。
+        </div>
+      </div>
+
+      <!-- Actions -->
+      <div style="text-align: center; margin-top: 2rem">
+        <a href="/calendar" class="btn btn-success">
+          <span>📅</span> 根据诊断结果生成耕作日历
+        </a>
+        <button
+          type="button"
+          class="btn btn-outline"
+          onclick="window.print()"
+          style="margin-left: 1rem"
+        >
+          <span>🖨️</span> 打印报告
+        </button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- How It Works -->
+<section style="background: white; padding: 3rem 0">
+  <div class="container">
+    <div class="section-header">
+      <h2>📋 如何使用黑土快诊</h2>
+      <p>简单三步，了解咱家黑土健康状况</p>
+    </div>
+
+    <div
+      class="feature-grid"
+      style="grid-template-columns: repeat(auto-fit, minmax(220px, 1fr))"
+    >
+      <div class="feature-card" style="text-align: center">
+        <div
+          style="
+            width: 60px;
+            height: 60px;
+            background: var(--primary-color);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1rem;
+            color: white;
+            font-size: 1.5rem;
+            font-weight: bold;
+          "
+        >
+          1
+        </div>
+        <h3>拍照上传</h3>
+        <p>用手机拍摄地块土壤照片，尽量选择光照好的时段</p>
+      </div>
+      <div class="feature-card" style="text-align: center">
+        <div
+          style="
+            width: 60px;
+            height: 60px;
+            background: var(--primary-color);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1rem;
+            color: white;
+            font-size: 1.5rem;
+            font-weight: bold;
+          "
+        >
+          2
+        </div>
+        <h3>填写信息</h3>
+        <p>简单填写地块位置、种植历史、产量情况（选填，越详细越准）</p>
+      </div>
+      <div class="feature-card" style="text-align: center">
+        <div
+          style="
+            width: 60px;
+            height: 60px;
+            background: var(--primary-color);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1rem;
+            color: white;
+            font-size: 1.5rem;
+            font-weight: bold;
+          "
+        >
+          3
+        </div>
+        <h3>获取报告</h3>
+        <p>AI 2分钟出结果，给出健康评分和改良建议</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Related Services -->
+<section
+  style="
+    background: linear-gradient(
+      135deg,
+      rgba(45, 90, 39, 0.05) 0%,
+      rgba(74, 124, 67, 0.08) 100%
+    );
+    padding: 3rem 0;
+  "
+>
+  <div class="container">
+    <div class="section-header">
+      <h2>🔗 相关服务</h2>
+      <p>根据诊断结果，继续使用其他功能</p>
+    </div>
+
+    <div
+      class="feature-grid"
+      style="grid-template-columns: repeat(auto-fit, minmax(280px, 1fr))"
+    >
+      <div class="feature-card">
+        <div class="feature-icon">📅</div>
+        <h3>全周期农艺管家</h3>
+        <p>根据土壤健康状况，生成专属的保护性耕作日历，精准到每一天。</p>
+        <a href="/calendar" class="btn btn-outline btn-block mt-2"
+          >立即生成 →</a
+        >
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">🐛</div>
+        <h3>病虫草害识别</h3>
+        <p>拍照识别病虫害，获取本地化的绿色防控方案。</p>
+        <a href="/pest" class="btn btn-outline btn-block mt-2">开始识别 →</a>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">👥</div>
+        <h3>农友互助社区</h3>
+        <p>有更多问题？来社区问问，AI+农技员24小时解答。</p>
+        <a href="/community" class="btn btn-outline btn-block mt-2"
+          >进入社区 →</a
+        >
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock %} {% block extra_js %}
+<script>
+  // File upload handling
+  const uploadArea = document.getElementById("uploadArea");
+  const imageInput = document.getElementById("imageInput");
+  const uploadPreview = document.getElementById("uploadPreview");
+  const previewImage = document.getElementById("previewImage");
+
+  // Click to upload
+  uploadArea.addEventListener("click", () => imageInput.click());
+
+  // File selected
+  imageInput.addEventListener("change", function (e) {
+    const file = e.target.files[0];
+    if (file) {
+      showPreview(file);
+    }
+  });
+
+  // Drag and drop
+  uploadArea.addEventListener("dragover", (e) => {
+    e.preventDefault();
+    uploadArea.classList.add("dragover");
+  });
+
+  uploadArea.addEventListener("dragleave", () => {
+    uploadArea.classList.remove("dragover");
+  });
+
+  uploadArea.addEventListener("drop", (e) => {
+    e.preventDefault();
+    uploadArea.classList.remove("dragover");
+    const file = e.dataTransfer.files[0];
+    if (file && file.type.startsWith("image/")) {
+      imageInput.files = e.dataTransfer.files;
+      showPreview(file);
+    }
+  });
+
+  function showPreview(file) {
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      previewImage.src = e.target.result;
+      uploadArea.style.display = "none";
+      uploadPreview.style.display = "block";
+    };
+    reader.readAsDataURL(file);
+  }
+
+  function clearPreview() {
+    imageInput.value = "";
+    previewImage.src = "";
+    uploadArea.style.display = "block";
+    uploadPreview.style.display = "none";
+  }
+
+  // Form submission
+  document
+    .getElementById("diagnosisForm")
+    .addEventListener("submit", async function (e) {
+      e.preventDefault();
+
+      const formData = new FormData(this);
+      const submitBtn = document.getElementById("submitBtn");
+
+      // Show loading
+      document.getElementById("diagnosisForm").style.display = "none";
+      document.getElementById("loadingState").style.display = "flex";
+
+      try {
+        const response = await fetch("/api/soil-analyze", {
+          method: "POST",
+          body: formData,
+        });
+
+        const data = await response.json();
+
+        if (data.success) {
+          displayResults(data.result, data.image_url);
+        } else {
+          alert("分析失败：" + data.error);
+          document.getElementById("diagnosisForm").style.display = "block";
+          document.getElementById("loadingState").style.display = "none";
+        }
+      } catch (error) {
+        console.error("Error:", error);
+        alert("网络错误，请重试");
+        document.getElementById("diagnosisForm").style.display = "block";
+        document.getElementById("loadingState").style.display = "none";
+      }
+    });
+
+  function displayResults(result, imageUrl) {
+    document.getElementById("loadingState").style.display = "none";
+    document.getElementById("resultSection").style.display = "block";
+
+    // Health Score
+    const scoreClass = getScoreClass(result.health_score);
+    document.getElementById("healthScore").innerHTML = `
+            <div class="score-circle ${scoreClass}">
+                ${result.health_score}
+                <span>分</span>
+            </div>
+            <h3>${result.health_level}</h3>
+            <p style="color: var(--text-secondary);">综合健康评分 · ${result.report_time}</p>
+        `;
+
+    // Interpretation
+    const interpretationHtml = result.plain_interpretation
+      .map((text) => `<li>${text}</li>`)
+      .join("");
+    document.getElementById("interpretationList").innerHTML =
+      interpretationHtml;
+
+    // Indicators
+    const degradationBadgeClass =
+      result.degradation_risk === "高"
+        ? "high"
+        : result.degradation_risk === "中"
+          ? "medium"
+          : "low";
+    const erosionBadgeClass =
+      result.erosion_risk === "高"
+        ? "high"
+        : result.erosion_risk === "中"
+          ? "medium"
+          : "low";
+
+    document.getElementById("indicatorGrid").innerHTML = `
+            <div class="indicator-item">
+                <div class="indicator-value">${result.organic_matter}%</div>
+                <div class="indicator-label">有机质含量</div>
+            </div>
+            <div class="indicator-item">
+                <div class="indicator-value">${result.plowing_depth}cm</div>
+                <div class="indicator-label">耕层厚度</div>
+            </div>
+            <div class="indicator-item">
+                <div class="indicator-label">退化风险</div>
+                <span class="indicator-badge ${degradationBadgeClass}">${result.degradation_risk}</span>
+            </div>
+            <div class="indicator-item">
+                <div class="indicator-label">水土流失风险</div>
+                <span class="indicator-badge ${erosionBadgeClass}">${result.erosion_risk}</span>
+            </div>
+        `;
+
+    // Image Analysis
+    const imgAnalysis = result.image_analysis;
+    document.getElementById("imageAnalysisGrid").innerHTML = `
+            <div class="indicator-item">
+                <div class="indicator-value">${imgAnalysis.dark_soil_ratio}%</div>
+                <div class="indicator-label">黑土特征比例</div>
+            </div>
+            <div class="indicator-item">
+                <div class="indicator-value">${imgAnalysis.texture_score}</div>
+                <div class="indicator-label">土壤纹理评分</div>
+            </div>
+            <div class="indicator-item">
+                <div class="indicator-value">${imgAnalysis.moisture_level}%</div>
+                <div class="indicator-label">土壤湿润度</div>
+            </div>
+        `;
+
+    // Suggestions
+    const iconMap = {
+      免耕: "tillage",
+      秸秆还田: "straw",
+      轮作: "rotation",
+      有机肥: "organic",
+      水土保持: "erosion",
+    };
+
+    const iconEmoji = {
+      免耕: "🚜",
+      秸秆还田: "🌾",
+      轮作: "🔄",
+      有机肥: "🌿",
+      水土保持: "💧",
+    };
+
+    const suggestionsHtml = result.suggestions
+      .map(
+        (s) => `
+            <div class="suggestion-item">
+                <div class="suggestion-icon ${iconMap[s.type] || "tillage"}">
+                    ${iconEmoji[s.type] || "📋"}
+                </div>
+                <div class="suggestion-content">
+                    <h4>${s.title}</h4>
+                    <p>${s.content}</p>
+                </div>
+            </div>
+        `,
+      )
+      .join("");
+    document.getElementById("suggestionsList").innerHTML = suggestionsHtml;
+
+    // Scroll to results
+    document
+      .getElementById("resultSection")
+      .scrollIntoView({ behavior: "smooth" });
+  }
+
+  function getScoreClass(score) {
+    if (score >= 85) return "excellent";
+    if (score >= 70) return "good";
+    if (score >= 55) return "fair";
+    if (score >= 40) return "poor";
+    return "terrible";
+  }
+</script>
+{% endblock %}
